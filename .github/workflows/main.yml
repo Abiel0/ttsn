@@ -1,13 +1,23 @@
-name: Run Flask Application
+name: Deploy to GitHub Pages
 
 on:
   push:
     branches:
       - main
-  workflow_dispatch:
 
 jobs:
-  run_app:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Deploy to GitHub Pages
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./docs
+
+  run_flask:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
@@ -23,4 +33,5 @@ jobs:
         pip install -r requirements.txt
 
     - name: Run Flask application
-      run: python app.py
+      run: python app.py &
+      # This will run the Flask app in the background
